@@ -19,13 +19,14 @@ def runRight(speed):
 def stopRight():
     rightMotor.stop()
 
+
 def start():
     log(localTime)
     log('running build: ' + build)
+    log('starting script')
 
 def loop():
     runRight(50)
-
 
 start()
 
