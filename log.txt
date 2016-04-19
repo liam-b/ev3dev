@@ -1,2 +1,0 @@
-[OUT] local time: Tue Apr 19 05:39:41 2016
-[OUT] running build: alpha 0.1

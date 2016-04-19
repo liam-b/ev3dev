@@ -1,4 +1,5 @@
-#!
+#!/usr/bin/env python
+
 import ev3dev.ev3 as ev3
 import time
 
@@ -7,21 +8,26 @@ rightMotor = ev3.LargeMotor('outA')
 build = 'alpha 0.1'
 running = True
 localTime = time.asctime(time.localtime(time.time()))
+logFile = open('output.log', 'w')
 
-logFile = open('log.txt', 'w')
-def log(text, status):
-    logFile.write('[' + status + '] ' + text + '\n')
-    
-log('logging: ' + localTime,'OUT')
-log('running build: ' + build,'OUT')
+def log(text):
+    logFile.write(text + '\n')
 
 def runRight(speed):
     rightMotor.run_forever(duty_cycle_sp = speed)
-    
+
 def stopRight():
     rightMotor.stop()
 
-# runRight(100)
-# time.sleep(3)
-# stopRight()
-time.sleep(3)
+def start():
+    log(localTime)
+    log('running build: ' + build)
+
+def loop():
+    runRight(50)
+
+
+start()
+
+while running:
+    loop()
