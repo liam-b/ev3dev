@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import ev3dev.ev3 as ev3
+import datetime as datetime
 import time
 
 rightMotor = ev3.LargeMotor('outA')
@@ -8,7 +9,7 @@ colorRight = ev3.ColorSensor('in1')
 
 build = 'alpha 0.3'
 running = True
-localTime = time.asctime(time.localtime(time.time()))
+localTime = str(datetime.now())
 logFile = open('output.log', 'w')
 
 def log(text):
@@ -25,10 +26,7 @@ def sleep(delay):
 
 
 def start():
-    log(localTime)
-    log('running build: ' + build)
-    log('starting script')
-    # log(colorRight.value2)
+    log(localTime + ' | ' + build + '\n')
 
 def loop():
     runRight(50)
