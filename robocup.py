@@ -16,20 +16,22 @@ class Motor():
         self.motor.stop()
         
 class ColorSensor():
-    def __init__(self, port):
+    def __init__(self, sensor, port):
         self.port = port
-        self.sensor = ev3.ColorSensor(port)
+        self.sensor = ev3.ColorSensor(sensor, port)
         
 motorRight = Motor('outA')
-colorRight = ColorSensor('in1')
+colorRight = ColorSensor('ColorSensor', 'in1')
 
-build = 'alpha 0.3'
+build = 'alpha 0.7'
 running = True
 localTime = time.strftime('%c')
 logFile = open('output.log', 'w')
+count = int(0)
 
 def log(text):
     logFile.write(text + '\n')
+    print text
     
 def sleep(delay):
     time.sleep(delay / 1000)
@@ -38,9 +40,18 @@ def sleep(delay):
 
 def start():
     log(localTime + ' | ' + build + '\n')
+    log(str(colorRight))
+    log(str(colorRight.__dict__.keys()))
+    log(str(colorRight.__module__))
+    log(str(colorRight.__init__))
+    log(str(dir(colorRight)))
+    log(str(vars(colorRight)))
 
 def loop():
-    motorRight.run(50)
+    motorRight.run(10)
+    count = count + 1
+    if count > 100:
+        running = False
 
 start()
 
