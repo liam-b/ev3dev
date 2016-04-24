@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
 import ev3dev.ev3 as ev3
-import datetime as datetime
 import time
 
 class Motor():
     def __init__(self, port):
-        self.port = port
+        self.port = port[2:3]
         self.motor = ev3.LargeMotor(port)
     
     def run(self, speed):
@@ -16,18 +15,33 @@ class Motor():
         self.motor.stop()
         
 class ColorSensor():
-    def __init__(self, sensor, port):
-        self.port = port
-        self.sensor = ev3.ColorSensor(sensor, port)
+    def __init__(self, port):
+        self.port = port[2:3]
+        self.sensor = ev3.ColorSensor(port)
         
+    def value(self):
+        return self.sensor.value('0')
+    
+    def mode(self, mode):
+        self.sensor.mode = mode
+        
+class UltrasonicSensor():
+        def __init__(self, port):
+            self.port = port[2:3]
+            self.motor = ev3.UltrasonicSensor(port)
+        
+        def value(self):
+            return self.sensor.value('0')
+            
 motorRight = Motor('outA')
-colorRight = ColorSensor('ColorSensor', 'in1')
+# motorLeft = Motor('outB')
+colorRight = ColorSensor('in1')
 
-build = 'alpha 0.7'
+build = 'alpha 1.2'
 running = True
 localTime = time.strftime('%c')
 logFile = open('output.log', 'w')
-count = int(0)
+speed = 0
 
 def log(text):
     logFile.write(text + '\n')
@@ -38,22 +52,9 @@ def sleep(delay):
 
 #####
 
-def start():
-    log(localTime + ' | ' + build + '\n')
-    log(str(colorRight))
-    log(str(colorRight.__dict__.keys()))
-    log(str(colorRight.__module__))
-    log(str(colorRight.__init__))
-    log(str(dir(colorRight)))
-    log(str(vars(colorRight)))
-
-def loop():
-    motorRight.run(10)
-    count = count + 1
-    if count > 100:
-        running = False
-
-start()
+log(localTime + ' | ' + build + '\n')
 
 while running:
-    loop()
+    motorRight.run(speed)
+    print colorRight.value()
+    print colorRight.port
