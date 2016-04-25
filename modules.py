@@ -39,3 +39,5 @@ class UltrasonicSensor():
                 
 def sleep(delay):
     time.sleep(delay / 1000)
+    
+localTime = time.strftime('%c')
