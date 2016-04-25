@@ -1,4 +1,5 @@
 import ev3dev.ev3 as ev3
+import time
 
 class Motor():
     def __init__(self, port):
@@ -35,3 +36,6 @@ class UltrasonicSensor():
         
         def value(self, value):
                 return int((2550 - self.sensor.value(value)) / 5)
+                
+def sleep(delay):
+    time.sleep(delay / 1000)

@@ -17,16 +17,11 @@ ultrasonic = UltrasonicSensor('in2')
 build = 'alpha 1.4'
 running = True
 localTime = time.strftime('%c')
-    
-def sleep(delay):
-    time.sleep(delay / 1000)
 
-#####
 
-starwars.play()
+# starwars.play()
 print localTime + ' | ' + build
 colorRight.mode('RGB-RAW')
 
 while running:
     print colorRight.rgbValue()
-    # print ultrasonic.value(0)
