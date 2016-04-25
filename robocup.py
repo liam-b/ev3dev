@@ -2,7 +2,6 @@
 
 import ev3dev.ev3 as ev3
 import time
-import os
 
 class Motor():
     def __init__(self, port):
@@ -26,28 +25,32 @@ class ColorSensor():
     def mode(self, mode):
         self.sensor.mode = mode
         
+    def rgb(self):
+        return [self.sensor.value(0), self.sensor.value(1), self.sensor.value(2)]
+        
+    def rgbValue(self):
+        return (self.sensor.value(0) + self.sensor.value(1) + self.sensor.value(2)) / 3
+        
 class UltrasonicSensor():
         def __init__(self, port):
             self.port = port[2:3]
             self.sensor = ev3.UltrasonicSensor(port)
         
-        def value(self):
-            return self.sensor.value('0')
+        def value(self, value):
+                return int((2550 - self.sensor.value(value)) / 5)
             
 motorRight = Motor('outA')
 # motorLeft = Motor('outB')
+# motorLeft = Motor('outC')
 
 colorRight = ColorSensor('in1')
+# colorLeft = ColorSensor('in1')
+
+ultrasonic = UltrasonicSensor('in2')
 
 build = 'alpha 1.4'
 running = True
 localTime = time.strftime('%c')
-logFile = open('output.log', 'w')
-speed = 0
-
-def log(text):
-    logFile.write(text + '\n')
-    print text
     
 def sleep(delay):
     time.sleep(delay / 1000)
@@ -60,9 +63,9 @@ def starwars():
 #####
 
 # starwars()
-log(localTime + ' | ' + build + '\n')
+print localTime + ' | ' + build
 colorRight.mode('RGB-RAW')
 
 while running:
-    motorRight.run(speed)
-    print str(colorRight.value(0)) + ' | ' + str(colorRight.value(1)) + ' | ' + str(colorRight.value(2)) + ' | ' + str((colorRight.value(0) + colorRight.value(1) + colorRight.value(2)) / 3)
+    print colorRight.rgbValue()
+    # print ultrasonic.value(0)
