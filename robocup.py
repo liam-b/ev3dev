@@ -1,46 +1,59 @@
 #!/usr/bin/env python
 
 import ev3dev.ev3 as ev3
-from modules import *
+from motor import *
+from sensor import *
+import sound
 import starwars
 import time
             
 motorRight = Motor('outA')
-# motorLeft = Motor('outB')
+motorLeft = Motor('outB')
 # motorLeft = Motor('outC')
 
-colorRight = ColorSensor('in1')
+# colorRight = ColorSensor('in1')
 # colorLeft = ColorSensor('in1')
 
-ultrasonic = UltrasonicSensor('in4')
+# ultrasonic = UltrasonicSensor('in2')
 
-build = 'alpha 1.4'
+build = 'alpha 1.6'
 running = True
+localTime = time.strftime('%c')
+    
+def sleep(delay):
+    time.sleep(delay / 1000)
+    
+def run(right, left):
+    motorRight.run(right)
+    motorLeft.run(left)
 
+def stop():
+    motorRight.stop()
+    motorLeft.stop()
 
+#####
 
 # starwars.play()
 print localTime + ' | ' + build
-colorRight.mode('COL-COLOR')
-    # rgb = RGB-RAW
-    # reflect = COL-REFLECT
-    # color = COL-COLOR
-
-def followLine():
-    if colorRight.value(0) > 4: 
-        ev3.Sound.beep()
-        while colorRight.value(0) > 4:
-            sleep(1)
+# colorRight.mode('RGB-RAW')
 
 while running:
-    # if foundGreen():
-    #     turnOnGreen()
-    #     
-    # if foundWaterTower():
-    #     evadeWaterTower()
-    #     
-    # if foundSpill():
-    #     enterSpill()
+    # print colorRight.rgbValue()
+    # print ultrasonic.value(0)
     
-    # followLine()
-    print '[' + str(colorRight.value(0)) + ', ' + str(ultrasonic.value(0)) + ']'
+    command = raw_input()
+    
+    if command == 'w':
+        run(75, 75)
+    elif command == 's':
+        run(-75, -75)
+    elif command == 'd':
+        run(-75, 75)
+    elif command == 'a':
+        run(75, -75)
+    elif command == 'e':
+        run(40, 75)
+    elif command == 'q':
+        run(75, 40)
+    elif command == '':
+        stop()
