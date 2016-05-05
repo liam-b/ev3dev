@@ -11,8 +11,8 @@ motorRight = Motor('outA')
 motorLeft = Motor('outB')
 # motorLeft = Motor('outC')
 
-# colorRight = ColorSensor('in1')
-# colorLeft = ColorSensor('in1')
+colorRight = ColorSensor('in1')
+colorLeft = ColorSensor('in2')
 
 # ultrasonic = UltrasonicSensor('in2')
 

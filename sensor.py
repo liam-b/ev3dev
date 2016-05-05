@@ -24,4 +24,3 @@ class UltrasonicSensor():
         
         def value(self, value):
                 return int((2550 - self.sensor.value(value)) / 5)
-                
