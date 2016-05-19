@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 import ev3dev.ev3 as ev3
-from motor import *
-from sensor import *
-import sound
-import starwars
+from py/motor import *
+from py/sensor import *
+import py/sound
+import tone/starwars
 import time
             
 motorRight = Motor('outA')
@@ -35,12 +35,24 @@ def stop():
 
 # starwars.play()
 print localTime + ' | ' + build
-# colorRight.mode('RGB-RAW')
+colorRight.mode('COL-REFLECT')
+BLACK = 30
 
-while running:
-    # print colorRight.rgbValue()
-    # print ultrasonic.value(0)
+#####
+
+def followLine():
+    if colorRight.value(0) < 20:
+        run(-40, 60)
+    # elif colorRight.value(0) < 50:
+    #     run(40, 60)
+    elif colorLeft.value(0) < 20:
+        run(60, -40)
+    # elif colorLeft.value(0) < 50:
+    #     run(60, 40)
+    else:
+        run(40, 40)
     
+def control():
     command = raw_input()
     
     if command == 'w':
@@ -57,3 +69,8 @@ while running:
         run(75, 40)
     elif command == '':
         stop()
+
+while running:
+    followLine()
+    print str(colorRight.value(0)) + ' | ' + str(colorLeft.value(0))
+    # print ultrasonic.value(0)
