@@ -1,4 +1,4 @@
-import ev3dev.ev3 as ev3 # essential
+import ev3dev.ev3 as ev3
 
 from robocup.motor import * # used for motors
 from robocup.sensor import * # used for sensors
