@@ -54,7 +54,7 @@ colorSensor.value(0) # this is the main value for most modes though it can range
 colorSensor.mode('COL-REFLECT') # changes the sensors mode list of modes are: 
 # 'COL-REFLECT' reflected light value [value(0)] 0 - 100
 # 'COL-AMBIENT' ambient light value [value(0)] 0 - 100
-# 'COL-COLOR' predefined color value [value(0)] 0 - 7
+# 'COL-COLOR' predefined color value [value(0)] 0 - 7, 1: black, 2: blue, 3: green, 4: yellow, 5: red, 6: white and 7: brown
 # 'REF-RAW' no idea [value(0)] 0 - 1020
 # 'RGB-RAW' raw rgb values (use sensor.rgb() for array format) [value(0), value(1), value(3)] 0 - 1020
 # 'COL-CAL' no idea
@@ -71,7 +71,7 @@ ultrasonicSensor.value(0) # this is the only value ranging from 0 - 2550
 gyroSensor.value(0) # this is the only value ranging from 0 - 2550
 gyroSensor.mode('GYRO-ANG') # changes the sensors mode list of modes are: 
 # 'GYRO-ANG' angle [value(0)] -32768 - 32767
-# 'GYRO-RATE' turning speed rate [value(0)] -440 to 440
+# 'GYRO-RATE' turning speed rate [value(0)] -440 - 440
 ```
 
 ### Logger
@@ -92,4 +92,4 @@ output.warn('warning') # logs warning
 output.err('warning') # logs error
 ```
 
-For this you might want to install a .log file grammer (for atom) such as https://atom.io/packages/language-log
+For this you might want to install a .log file grammar (for atom) such as https://atom.io/packages/language-log. As a note I will add more sensor classes in the future. For any other info go to http://www.ev3dev.org/

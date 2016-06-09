@@ -4,6 +4,7 @@ class ColorSensor():
     def __init__(self, port):
         self.port = port[2:3]
         self.sensor = ev3.ColorSensor(port)
+        self.sensor.mode = 'COL-COLOR'
         
     def value(self, value):
         return self.sensor.value(value)
