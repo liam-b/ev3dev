@@ -1,14 +1,14 @@
 # Robocup using ev3dev
 
-This is a [robocup](http://www.robocupjunior.org.au/) program running [ev3dev](https://http://www.ev3dev.org/) with python. I have put together a library to make it a little easier to work with but it mainly the same as what the guys over at ev3dev built. You can go over to http://www.ev3dev.org/ to learn how to install ev3dev onto your EV3. Once you have that installed and running (which may take a while and a few tries) you will need to download my library.
+This is a [robocup](http://www.robocupjunior.org.au/) program running [ev3dev](https://http://www.ev3dev.org/) with python. I have put together a library to make it a little easier to work with but it mainly the same as what the guys over at ev3dev built. You can go over to http://www.ev3dev.org/ to learn how to install ev3dev onto your EV3. Once you have that installed and running (which may take a while and a few tries) you will need to download my library. Just as a note you will definitely need to know a good amount of python to use this library.
 
-# Docs
+# Docs for the library
 
 Once the library is all installed you will need to import it into your python file using:
 
 ```python
-from motor import *
-from sensor import *
+from robocup.motor import *
+from robocup.sensor import *
 ```
 
 This grabs all the motor and sensor classes. You'll also need to import ev3dev with:
@@ -79,7 +79,7 @@ gyroSensor.mode('GYRO-ANG') # changes the sensors mode list of modes are:
 If you want to use my logger as well import with:
 
 ```python
-from logger import *
+from robocup.logger import *
 ```
 
 To log to a new file and write to it use:
@@ -92,4 +92,4 @@ output.warn('warning') # logs warning
 output.err('warning') # logs error
 ```
 
-For this you might want to install a .log file grammer (for atom)
+For this you might want to install a .log file grammer (for atom) such as https://atom.io/packages/language-log
