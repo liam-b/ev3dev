@@ -123,3 +123,4 @@ sound.note(392, 350) # play a note for a certain amount of time
 sound.starwars() # play the star wars theme song
 ```
 
+Liam Brennan 2016
