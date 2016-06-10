@@ -7,8 +7,8 @@ This is a [robocup](http://www.robocupjunior.org.au/) program running [ev3dev](h
 Once the library is all installed you will need to import it into your python file using:
 
 ```python
-from robocup.motor import *
-from robocup.sensor import *
+from lib.motor import *
+from lib.sensor import *
 ```
 
 This grabs all the motor and sensor classes. You may also need to import ev3dev with:
@@ -89,7 +89,7 @@ As a note I will add more sensor classes in the future. For any other info go to
 If you want to use my logger as well import with:
 
 ```python
-from robocup.logger import *
+from lib.logger import *
 ```
 
 To log to a new file and write to it use:
@@ -109,7 +109,7 @@ For this you might want to install a .log file grammar (for atom) such as https:
 Another thing ev3dev supports is sound. I've also put together a library for that, you can import it like so:
 
 ```python
-from robocup.sound import *
+from lib.sound import *
 
 sound = Sound()
 ```

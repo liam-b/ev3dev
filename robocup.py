@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 import ev3dev.ev3 as ev3
-from motor import *
-from sensor import *
-import time
-from logger import Logger
+from lib.motor import *
+from lib.sensor import *
+from lib.logger import *
+from lib.time import *
 
 output = Logger('log/output.log')
             
@@ -20,9 +20,6 @@ ultrasonic = UltrasonicSensor('in2')
 build = 'beta 1.1'
 running = True
 localTime = time.strftime('%c')
-    
-def sleep(delay):
-    time.sleep(delay / 1000)
     
 def run(right, left):
     motorRight.run(right)
