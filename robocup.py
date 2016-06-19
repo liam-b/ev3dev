@@ -4,8 +4,10 @@ import ev3dev.ev3 as ev3
 from lib.motor import *
 from lib.sensor import *
 from lib.logger import *
+from lib.sound import *
 import time
 
+sound = Sound()
 output = Logger('log/output.log')
             
 motorRight = Motor('outA')
@@ -151,6 +153,22 @@ def checkForWaterTower():
         time.sleep(1)
         output.log('avoided water tower')
         output.log('following line')
+        
+def checkForSpill():
+    if colorRight.value(0) > 83 and colorLeft.value(0) > 83:
+        run(SPEED_SLOW, SPEED_SLOW)
+        time.sleep(0.3)
+        mode('COL-COLOR')
+        if colorLeft.value(0) == 3 and colorRight.value(0) == 3:
+            sound.beep()
+            stop()
+            findCan()
+            
+def findCan():
+    run(SPEED_SLOW, SPEED_SLOW)
+    time.sleep(3)
+    stop()
+    time.sleep(100)
     
 output.log('started robot, running version ' + build)
 output.log('setting color sensor modes')
@@ -164,4 +182,6 @@ output.log('following line')
 while running:
     followLine()
     checkForGreen()
-    checkForWaterTower()
+    # checkForWaterTower()
+    checkForSpill()
+    print str(colorLeft.value(0)) + ' | ' + str(colorLeft.value(0))
