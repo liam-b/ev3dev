@@ -4,7 +4,7 @@ import ev3dev.ev3 as ev3
 from lib.motor import *
 from lib.sensor import *
 from lib.logger import *
-from lib.time import *
+import time
 
 output = Logger('log/output.log')
             
@@ -15,12 +15,39 @@ motorClaw = Motor('outC')
 colorRight = ColorSensor('in1')
 colorLeft = ColorSensor('in4')
 ultrasonic = UltrasonicSensor('in2')
-# gyro = GyroSensor('in3')
+gyro = GyroSensor('in3')
 
 build = 'beta 1.1'
 running = True
-localTime = time.strftime('%c')
-    
+
+#####
+
+followCount = 0
+doLineFollow = True
+doGreenTurn = True
+doAvoidWaterTower = True
+
+WHITE = 70
+BLACK = 25
+AVERAGE = (WHITE + BLACK) / 2
+
+FORWARD_SPEED = 70
+SPEED_SLOW = 40
+BACKWARDS_SPEED = 40
+TURN_SPEED = -80
+TURN_FORWARD_SPEED = 80
+AVOID_SPEED = 40
+
+TURN_THRESHOLD = 27
+AVOID_THRESHOLD = 50
+ULTRASONIC_THRESHOLD = 180
+
+GREEN_TURN_SPEED = 0
+GREEN_TURN_DELAY = 0
+GREEN_FORWARD_DELAY = 0
+
+#####
+
 def run(right, left):
     motorRight.run(right)
     motorLeft.run(left)
@@ -35,13 +62,13 @@ def mode(newMode):
     
 def setupClaw():
     motorClaw.run(-10)
-    sleep(2000)
+    time.sleep(2)
     motorClaw.run(10)
-    sleep(3000)
+    time.sleep(3)
     motorClaw.stop()
         
 def positionState():
-    if colorRight.value(0) < 20 and colorLeft.value(0) < 20:
+    if colorRight.value(0) < BLACK and colorLeft.value(0) < BLACK:
         return 'doubleBlack'
     elif colorRight.value(0) < 3 and colorLeft.value(0) < 3:
         return 'fullBlack'
@@ -52,94 +79,89 @@ def positionState():
     else:
         return 'unknown'
 
-#####
-
-output.log('started robot, running version ' + build)
-output.log('setting color sensor modes')
-mode('COL-REFLECT')
-output.log('calibrating claw')
-setupClaw()
-output.log('starting course at: ' + positionState())
-output.log('-------')
-output.log('following line')
-
-followCount = 0
-
-#####
-
 def followLine():        
-    global followCount
-    
-    if colorRight.value(0) < 25:
-        run(-80, 75)
-    elif colorRight.value(0) < 50:
-        run(40, 75)
-    elif colorLeft.value(0) < 20:
-        run(75, -80)
-    elif colorLeft.value(0) < 50:
-        run(75, 40)
+    if colorRight.value(0) < TURN_THRESHOLD:
+        run(TURN_SPEED, TURN_FORWARD_SPEED)
+    elif colorRight.value(0) < AVOID_THRESHOLD:
+        run(AVOID_SPEED, FORWARD_SPEED)
+    elif colorLeft.value(0) < TURN_THRESHOLD:
+        run(TURN_FORWARD_SPEED, TURN_SPEED)
+    elif colorLeft.value(0) < AVOID_THRESHOLD:
+        run(FORWARD_SPEED, AVOID_SPEED)
     else:
-        run(75, 75)
-    
-    followCount += 1
-    
-    if followCount > 100:
-        followCount = 0;
-        output.log('following line')
+        run(FORWARD_SPEED, FORWARD_SPEED)
         
 def turnGreen():
     mode('COL-COLOR')
+    run(SPEED_SLOW, SPEED_SLOW)
+    time.sleep(0.3)
     output.log('black colors are ' + str(colorRight.value(0)) + ' | ' + str(colorLeft.value(0)))
     if colorLeft.value(0) == 3:
         output.log('turning left')
-        turn(motorLeft)
+        greenTurn(motorLeft, colorRight)
     elif colorRight.value(0) == 3:
         output.log('turning right')
-        turn(motorRight)
+        greenTurn(motorRight, colorLeft)
     elif colorLeft.value(0) == 3 and colorRight.value(0) == 3:
         output.warn('both sensors on green, trying again')
-        run(-50, -50)
-        sleep(1000)
-        run(50, 50)
-        sleep(1000)
+        greenTryAgain()
     elif colorLeft.value(0) == 1 and colorRight.value(0) == 1:
         output.log('going forward')
         run(50, 50)
-        sleep(1000)
+        time.sleep(1)
     else:
         output.warn('bad values, trying again')
-        run(-50, -50)
-        sleep(1000)
-        run(50, 50)
-        sleep(1000)
+        greenTryAgain()
         
     mode('COL-REFLECT')
         
-def turn(motor):
+def greenTurn(motor, sensor):
     run(50, 50)
-    sleep(1000)
+    time.sleep(0.6)
     motor.run(-50)
-    sleep(1000)
-
-while running:
-    followLine()
+    while sensor.value(0) != 1:
+        pass
     
+def greenTryAgain():
+    run(-50, -50)
+    time.sleep(0.3)
+    run(50, 50)
+    time.sleep(0.3)
+    
+def checkForGreen():
     if positionState() == 'doubleBlack':
         output.log('spotted double black at: ' + str(colorRight.value(0)) + ' | ' + str(colorLeft.value(0)))
         stop()
         turnGreen()
         output.log('finished green at: ' + str(colorRight.value(0)) + ' | ' + str(colorLeft.value(0)))
         output.log('following line')
-        
-    if ultrasonic.value(0) > 505:
+
+def checkForWaterTower():        
+    if ultrasonic.value(0) < ULTRASONIC_THRESHOLD:
+        run(-SPEED_SLOW, -SPEED_SLOW)
+        time.sleep(0.8)
         output.log('found water tower at: ' + str(ultrasonic.value(0)))
         run(60, -60)
-        sleep(1000)
-        run(35, 75)
-        while colorLeft.value(0) > 20:
+        time.sleep(1)
+        run(25, 75)
+        while colorLeft.value(0) > 30:
             pass
-        sleep(100)
+        time.sleep(0.1)
         run(60, -50)
-        sleep(1000)
+        time.sleep(1)
         output.log('avoided water tower')
         output.log('following line')
+    
+output.log('started robot, running version ' + build)
+output.log('setting color sensor modes')
+mode('COL-REFLECT')
+output.log('calibrating claw')
+# setupClaw()
+output.log('starting course at: ' + positionState())
+output.log('-------')
+output.log('following line')
+
+while running:
+    followLine()
+    checkForGreen()
+    checkForWaterTower()

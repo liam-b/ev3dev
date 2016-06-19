@@ -24,7 +24,7 @@ class UltrasonicSensor():
         self.sensor = ev3.UltrasonicSensor(port)
     
     def value(self, value):
-            return int((2550 - self.sensor.value(value)) / 5)
+            return self.sensor.value(value)
                 
 class GyroSensor():
     def __init__(self, port):

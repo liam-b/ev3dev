@@ -1,7 +1,8 @@
-from time import strftime, sleep
+import time
 
 def getCurrentTime():
-    return '[' + strftime("%d/%m/%Y %H:%M:%S") + '] '
+    # return '[' + time.strftime("%d/%m/%Y %H:%M:%S") + '] '
+    return '[16/5/2016 3:45:20] '
 
 class Logger:
     
